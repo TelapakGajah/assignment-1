@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+//buat struct
+struct Node {
+  int score;
+  Node *next; // pointer ke node selanjutnya
+} *headA, *tailA , *headB , *tailB; // head: node pertama, tail: node terakhir
+
+//buat newnode baru
+Node *createNode(int score) {
+  Node *newNode = (Node*)malloc(sizeof(Node)); // alokasi memory
+  newNode->score = score;
+  newNode->next = NULL; // awalnya tidak memiliki node selanjutnya
+  return newNode;
+}
+
+//buat print
+void printLinkedList(struct Node *curr){
+  while(curr) { // selama curr bukan NULL
+    printf("%d -> ", curr->score); // print data
+    curr = curr->next; // curr akan berjalan ke node selanjutnya
+  }
+  printf("NULL\n");
+}
+
+//fungsi merge
+Node *merge(Node *a,Node*b){
+    if(!a){
+        return b;
+    }
+    if(!b){
+        return a;
+    }
+    if(a->score < b->score){
+        a->next = merge(a->next,b);
+        return a;
+    }
+    else{
+        b->next = merge(a,b->next);
+        return b;
+    }
+}
+
+//Push tail 1 
+void pushTailA(int score) {
+
+  Node *temp = createNode(score); // buat nodenya
+
+  if(!headA) { // linked list kosong (0 node)
+    headA = tailA = temp; // temp akan menjadi head dan tail
+  } else { // >= 1 node
+    tailA ->next = temp; // tail lama -> next adalah node baru
+    tailA = temp; // temp akan menjadi tail (node terakhir)
+  }
+}
+//Push  tail 2
+void pushTailB(int score) {
+
+  Node *temp = createNode(score); // buat nodenya
+
+  if(!headB) { // linked list kosong (0 node)
+    headB = tailB = temp; // temp akan menjadi head dan tail
+  } else { // >= 1 node
+    tailB ->next = temp; // tail lama -> next adalah node baru
+    tailB = temp; // temp akan menjadi tail (node terakhir)
+  }
+}
+
+int main(){
+    pushTailA(2);
+    pushTailA(3);
+    pushTailA(5);
+    pushTailA(7);
+    printLinkedList(headA);
+    pushTailB(1);
+    pushTailB(4);
+    pushTailB(6);
+    pushTailB(8);
+    printLinkedList(headB);
+    Node* mergedhead = merge(headA, headB); 
+    printLinkedList(mergedhead);
+
+
+    return 0;
+}
